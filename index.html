@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma Educativa IA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+      min-height: 100vh;
+      color: white;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* ==================== LOGIN ==================== */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .logo-login {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+    }
+
+    .login-title {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      color: #bfdbfe;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #bfdbfe;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #93c5fd;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 12px 12px 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: #93c5fd;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #93c5fd;
+      cursor: pointer;
+      padding: 5px;
+      font-size: 18px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      border: none;
+      border-radius: 10px;
+      color: #0f172a;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.02);
+    }
+
+    .link-button {
+      background: none;
+      border: none;
+      color: #fbbf24;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .text-center {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+
+    .alert-success {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid #22c55e;
+      color: #86efac;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ==================== HEADER ==================== */
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .btn-logout, .btn-back {
+      background: rgba(239, 68, 68, 0.8);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s;
+    }
+
+    .btn-logout:hover, .btn-back:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-back {
+      background: rgba(251, 191, 36, 0.8);
+      color: #0f172a;
+    }
+
+    /* ==================== DASHBOARD ==================== */
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .welcome-section {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 40px;
+    }
+
+    .welcome-title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .units-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    .unit-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .unit-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .unit-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(251, 191, 36, 0.6);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .unit-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .unit-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .unit-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .unit-description {
+      color: #bfdbfe;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ==================== CONTENIDO EDUCATIVO ==================== */
+    .content-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .content-section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-subtitle {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 25px 0 15px;
+      color: #93c5fd;
+    }
+
+    .section-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #e0e7ff;
+      margin-bottom: 15px;
+    }
+
+    .highlight-box {
+      background: rgba(251, 191, 36, 0.1);
+      border-left: 4px solid #fbbf24;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 25px 0;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .feature-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #fbbf24;
+    }
+
+    .feature-description {
+      font-size: 14px;
+      color: #bfdbfe;
+      line-height: 1.6;
+    }
+
+    .list-styled {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .list-styled li {
+      padding: 12px 0;
+      padding-left: 30px;
+      position: relative;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #e0e7ff;
+    }
+
+    .list-styled li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #fbbf24;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    /* ==================== TABLA PERIÓDICA ==================== */
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #9fb3c8;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .filter-btn.active {
+      background: #7c3aed;
+      color: #fff;
+      border-color: #7c3aed;
+    }
+
+    .periodic {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      max-width: 1400px;
+    }
+
+    .app {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.1));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .app:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+      border-color: rgba(251, 191, 36, 0.4);
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .meta {
+      flex: 1;
+    }
+
+    .name {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .cat {
+      font-size: 13px;
+      color: #9fb3c8;
+      display: flex;
+      align-items: center;
+    }
+
+    .cat-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .c-chat { background: #6d28d9; }
+    .c-img { background: #0ea5a4; }
+    .c-video { background: #16a34a; }
+    .c-audio { background: #f472b6; }
+    .c-edu { background: #f59e0b; }
+    .c-tools { background: #3b82f6; }
+
+    /* ==================== MODAL DE VIDEO ==================== */
+    .video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .video-modal.active {
+      display: flex;
+    }
+
+    .video-modal-content {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 900px;
+      width: 100%;
+      position: relative;
+    }
+
+    .video-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .video-modal-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fbbf24;
+    }
+
+    .close-modal {
+      background: rgba(239, 68, 68, 0.8);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .close-modal:hover {
+      transform: scale(1.1);
+      background: rgba(239, 68, 68, 1);
+    }
+
+    .modal-video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-description {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(251, 191, 36, 0.1);
+      border-left: 4px solid #fbbf24;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e0e7ff;
+    }
+
+    .modal-button-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .visit-site-btn {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #0f172a;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .visit-site-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3);
+    }
+
+    /* ==================== EVALUACIÓN ==================== */
+    .quiz-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .quiz-category {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .category-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fbbf24;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .quiz-question {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .question-text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #e0e7ff;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px 20px;
+      color: #e0e7ff;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(251, 191, 36, 0.4);
+      transform: translateX(5px);
+    }
+
+    .option-btn.selected {
+      background: rgba(251, 191, 36, 0.2);
+      border-color: #fbbf24;
+    }
+
+    .option-btn.correct {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22c55e;
+    }
+
+    .option-btn.incorrect {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+    }
+
+    .option-letter {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .check-answer-btn {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #0f172a;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s;
+    }
+
+    .check-answer-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .check-answer-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid #22c55e;
+      color: #86efac;
+    }
+
+    .feedback.incorrect {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+
+    @media (max-width: 768px) {
+      .periodic {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+      
+      .welcome-title {
+        font-size: 28px;
+      }
+      
+      .section-title {
+        font-size: 24px;
+      }
+
+      .video-modal-content {
+        padding: 20px;
+      }
+
+      .video-modal-title {
+        font-size: 18px;
+      }
+
+      .quiz-question {
+        padding: 20px;
+      }
+
+      .category-title {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== VISTA DE INICIO DE SESIÓN ==================== -->
+  <div id="loginView" class="view active">
+    <div class="login-container">
+      <div class="login-box">
+        <div class="logo-login">🔐</div>
+        <h2 class="login-title" id="loginTitle">Iniciar Sesión</h2>
+        <p class="login-subtitle" id="loginSubtitle">Ingresa tus credenciales para continuar</p>
+
+        <div id="alertContainer"></div>
+
+        <div id="nameGroup" class="form-group hidden">
+          <label class="form-label">Nombre Completo</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="nameInput" class="form-input" placeholder="Juan Pérez">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Correo Electrónico</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="emailInput" class="form-input" placeholder="tu@email.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="passwordInput" class="form-input" placeholder="••••••••">
+            <button type="button" class="toggle-password" id="toggleBtn1">👁️</button>
+          </div>
+        </div>
+
+        <div id="confirmPasswordGroup" class="form-group hidden">
+          <label class="form-label">Confirmar Contraseña</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="confirmPasswordInput" class="form-input" placeholder="••••••••">
+            <button type="button" class="toggle-password" id="toggleBtn2">👁️</button>
+          </div>
+        </div>
+
+        <button id="submitBtn" class="btn-primary">Iniciar Sesión</button>
+
+        <div class="text-center">
+          <button class="link-button" id="toggleFormBtn">
+            <span id="toggleText">¿No tienes cuenta? Regístrate aquí</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VISTA DEL PANEL PRINCIPAL ==================== -->
+  <div id="dashboardView" class="view">
+    <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="header-logo">✨</div>
+          <div>
+            <div style="font-size: 20px; font-weight: bold;">Plataforma Educativa IA</div>
+            <div style="font-size: 12px; color: #bfdbfe;">Sistema de Aprendizaje Inteligente</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="logoutBtn1">
+          <span>🚪</span>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="welcome-section">
+        <h2 class="welcome-title">Bienvenido, <span id="userName"></span> 👋</h2>
+        <p style="font-size: 18px; color: #bfdbfe;">Explora el mundo de la Inteligencia Artificial en la educación</p>
+      </div>
+
+      <div class="units-grid">
+        <div class="unit-card" data-view="iaEducacionView">
+          <div class="unit-icon">🤖</div>
+          <h3 class="unit-title">¿Qué es la IA?</h3>
+          <p class="unit-description">Descubre qué es la Inteligencia Artificial y cómo está transformando el mundo de la educación</p>
+        </div>
+
+        <div class="unit-card" data-view="aplicacionesView">
+          <div class="unit-icon">🎓</div>
+          <h3 class="unit-title">IA en Educación</h3>
+          <p class="unit-description">Aprende cómo usar la IA para mejorar el aprendizaje, crear contenido y evaluar</p>
+        </div>
+
+        <div class="unit-card" data-view="recursosView">
+          <div class="unit-icon">📚</div>
+          <h3 class="unit-title">Herramientas IA</h3>
+          <p class="unit-description">Explora 23 aplicaciones de IA para potenciar tu experiencia educativa</p>
+        </div>
+
+        <div class="unit-card" data-view="evaluacionView">
+          <div class="unit-icon">📝</div>
+          <h3 class="unit-title">Evaluación</h3>
+          <p class="unit-description">Pon a prueba tus conocimientos sobre herramientas de IA educativa</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== VISTA: ¿QUÉ ES LA IA? ==================== -->
+  <div id="iaEducacionView" class="view">
+    <header class="header">
+      <div class="header-content">
+        <button class="btn-back" data-back="dashboardView">← Volver</button>
+        <button class="btn-logout" id="logoutBtn2">🚪 Salir</button>
+      </div>
+    </header>
+
+    <div class="content-container">
+      <div class="content-section">
+        <h1 class="section-title">🤖 ¿Qué es la Inteligencia Artificial?</h1>
+        
+        <p class="section-text">
+          La <strong>Inteligencia Artificial (IA)</strong> es una rama de la informática que busca crear sistemas capaces de realizar tareas que normalmente requieren inteligencia humana. Esto incluye el aprendizaje, el razonamiento, la resolución de problemas, la percepción, el lenguaje y la creatividad.
+        </p>
+
+        <h2 class="section-subtitle">📊 Tipos de Inteligencia Artificial</h2>
+        
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3 class="feature-title">IA Conversacional</h3>
+            <p class="feature-description">Sistemas que pueden mantener conversaciones naturales con humanos, como chatbots y asistentes virtuales.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🖼️</div>
+            <h3 class="feature-title">IA Generativa</h3>
+            <p class="feature-description">Crea contenido nuevo como imágenes, texto, música o video basándose en patrones aprendidos.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Machine Learning</h3>
+            <p class="feature-description">Sistemas que aprenden de datos y mejoran su rendimiento sin ser programados explícitamente.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <h3 class="feature-title">Deep Learning</h3>
+            <p class="feature-description">Redes neuronales profundas que imitan el funcionamiento del cerebro humano para procesar información.</p>
+          </div>
+        </div>
+
+        <h2 class="section-subtitle">🎓 La IA en el Contexto Educativo</h2>
+        
+        <p class="section-text">
+          La inteligencia artificial está revolucionando la educación al ofrecer experiencias de aprendizaje personalizadas, automatizar tareas administrativas y proporcionar retroalimentación instantánea a los estudiantes. Esta transformación permite a educadores y estudiantes enfocarse en lo que realmente importa: el aprendizaje significativo.
+        </p>
+
+        <div class="highlight-box">
+          <h3 style="color: #fbbf24; margin-bottom: 15px; font-size: 20px;">💡 Impacto de la IA en la Educación</h3>
+          <ul class="list-styled">
+            <li>Personalización del aprendizaje según el ritmo y estilo de cada estudiante</li>
+            <li>Automatización de tareas repetitivas como calificación y retroalimentación</li>
+            <li>Creación de contenido educativo adaptado y accesible</li>
+            <li>Análisis de datos para identificar áreas de mejora</li>
+            <li>Apoyo 24/7 a través de tutores virtuales inteligentes</li>
+            <li>Traducción y accesibilidad para estudiantes de diferentes idiomas</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VISTA: APLICACIONES EN EDUCACIÓN ==================== -->
+  <div id="aplicacionesView" class="view">
+    <header class="header">
+      <div class="header-content">
+        <button class="btn-back" data-back="dashboardView">← Volver</button>
+        <button class="btn-logout" id="logoutBtn3">🚪 Salir</button>
+      </div>
+    </header>
+
+    <div class="content-container">
+      <div class="content-section">
+        <h1 class="section-title">🎓 Cómo Usar IA en la Educación</h1>
+        
+        <p class="section-text">
+          La inteligencia artificial ofrece múltiples aplicaciones prácticas en el ámbito educativo. Desde la creación de contenido hasta la evaluación personalizada, estas herramientas están diseñadas para potenciar tanto la enseñanza como el aprendizaje.
+        </p>
+
+        <h2 class="section-subtitle">📝 1. Creación de Contenido Educativo</h2>
+        
+        <p class="section-text">
+          Las herramientas de IA pueden ayudarte a crear materiales didácticos de alta calidad en minutos:
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <h3 class="feature-title">Planes de Clase</h3>
+            <p class="feature-description">Genera planes de lección completos adaptados a diferentes niveles y objetivos de aprendizaje.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">❓</div>
+            <h3 class="feature-title">Preguntas y Exámenes</h3>
+            <p class="feature-description">Crea bancos de preguntas, cuestionarios y evaluaciones personalizadas automáticamente.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">Presentaciones</h3>
+            <p class="feature-description">Diseña presentaciones visuales atractivas con contenido relevante y estructurado.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">✍️</div>
+            <h3 class="feature-title">Rúbricas</h3>
+            <p class="feature-description">Desarrolla criterios de evaluación claros y objetivos para diferentes actividades.</p>
+          </div>
+        </div>
+
+        <h2 class="section-subtitle">🎨 2. Generación de Recursos Visuales</h2>
+        
+        <p class="section-text">
+          La IA puede crear imágenes, infografías y videos educativos que enriquecen el material de estudio:
+        </p>
+
+        <ul class="list-styled">
+          <li>Ilustraciones personalizadas para explicar conceptos complejos</li>
+          <li>Infografías automáticas con datos y estadísticas</li>
+          <li>Avatares y personajes para contenido interactivo</li>
+          <li>Videos educativos generados a partir de texto</li>
+          <li>Diagramas y mapas conceptuales visuales</li>
+        </ul>
+
+        <h2 class="section-subtitle">🤖 3. Tutorías Personalizadas</h2>
+        
+        <p class="section-text">
+          Los sistemas de IA pueden actuar como tutores virtuales que se adaptan a las necesidades individuales:
+        </p>
+
+        <div class="highlight-box">
+          <h3 style="color: #fbbf24; margin-bottom: 15px; font-size: 20px;">🌟 Beneficios de la Tutoría con IA</h3>
+          <ul class="list-styled">
+            <li>Retroalimentación instantánea sobre ejercicios y tareas</li>
+            <li>Explicaciones paso a paso adaptadas al nivel del estudiante</li>
+            <li>Disponibilidad 24/7 para resolver dudas</li>
+            <li>Práctica ilimitada con ejercicios generados dinámicamente</li>
+            <li>Seguimiento del progreso y detección de áreas débiles</li>
+          </ul>
+        </div>
+
+        <h2 class="section-subtitle">📚 4. Investigación y Resumen de Información</h2>
+        
+        <p class="section-text">
+          Las herramientas de IA pueden ayudar a estudiantes y profesores a procesar grandes cantidades de información:
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <h3 class="feature-title">Búsqueda Inteligente</h3>
+            <p class="feature-description">Encuentra información relevante y confiable de múltiples fuentes en segundos.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <h3 class="feature-title">Resúmenes Automáticos</h3>
+            <p class="feature-description">Extrae los puntos clave de documentos largos, artículos y libros.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🔗</div>
+            <h3 class="feature-title">Síntesis de Datos</h3>
+            <p class="feature-description">Combina información de diferentes fuentes en un formato coherente.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📖</div>
+            <h3 class="feature-title">Traducción</h3>
+            <p class="feature-description">Accede a contenido en diferentes idiomas con traducciones precisas.</p>
+          </div>
+        </div>
+
+        <h2 class="section-subtitle">✅ 5. Evaluación y Retroalimentación</h2>
+        
+        <p class="section-text">
+          La IA puede agilizar el proceso de evaluación y proporcionar retroalimentación constructiva:
+        </p>
+
+        <ul class="list-styled">
+          <li>Calificación automática de exámenes de opción múltiple y respuestas cortas</li>
+          <li>Análisis de ensayos con sugerencias de mejora en estructura y contenido</li>
+          <li>Detección de plagio y originalidad del contenido</li>
+          <li>Retroalimentación personalizada según el nivel del estudiante</li>
+          <li>Identificación de patrones de error para reforzar conceptos específicos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VISTA: TABLA PERIÓDICA DE HERRAMIENTAS ==================== -->
+  <div id="recursosView" class="view">
+    <header class="header">
+      <div class="header-content">
+        <button class="btn-back" data-back="dashboardView">← Volver</button>
+        <button class="btn-logout" id="logoutBtn4">🚪 Salir</button>
+      </div>
+    </header>
+
+    <div class="content-container">
+      <div style="margin-bottom: 20px;">
+        <h1 style="font-size: 28px; margin-bottom: 10px;">📚 IA en la Mochila: Apps Claves para el Estudio — <span id="appCount">23</span> herramientas</h1>
+        <p style="font-size: 14px; color: #9fb3c8;">Haz clic en cualquier app para ver más detalles y visitarla</p>
+      </div>
+
+      <nav class="filters">
+        <button class="filter-btn active" data-filter="all">Todas (<span class="count">23</span>)</button>
+        <button class="filter-btn" data-filter="chat"><span class="cat-dot c-chat"></span>Chat (<span class="count">5</span>)</button>
+        <button class="filter-btn" data-filter="img"><span class="cat-dot c-img"></span>Imágenes (<span class="count">3</span>)</button>
+        <button class="filter-btn" data-filter="video"><span class="cat-dot c-video"></span>Video (<span class="count">2</span>)</button>
+        <button class="filter-btn" data-filter="audio"><span class="cat-dot c-audio"></span>Audio (<span class="count">2</span>)</button>
+        <button class="filter-btn" data-filter="edu"><span class="cat-dot c-edu"></span>Educación (<span class="count">6</span>)</button>
+        <button class="filter-btn" data-filter="tools"><span class="cat-dot c-tools"></span>Herramientas (<span class="count">5</span>)</button>
+      </nav>
+
+      <section class="periodic" id="tabla">
+        <button class="app" data-cat="chat" data-url="https://chat.openai.com" data-video="hbwGYI0Nuoc" data-name="ChatGPT" data-desc="ChatGPT es un asistente de IA conversacional desarrollado por OpenAI. Puede ayudarte a escribir, resolver problemas, crear contenido educativo, generar ideas y responder preguntas sobre casi cualquier tema.">
+          <div class="logo" style="background:linear-gradient(135deg,#7c3aed,#4c1d95)">GPT</div>
+          <div class="meta">
+            <div class="name">ChatGPT</div>
+            <div class="cat"><span class="cat-dot c-chat"></span>Chat</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="chat" data-url="https://gemini.google.com" data-video="nqzzI5Pwnxc" data-name="Gemini" data-desc="Gemini es el modelo de IA de Google. Ofrece capacidades avanzadas de conversación, análisis de imágenes, búsqueda en tiempo real y puede ayudarte con tareas educativas, investigación y creación de contenido.">
+          <div class="logo" style="background:linear-gradient(135deg,#0ea5a4,#0284c7)">GEM</div>
+          <div class="meta">
+            <div class="name">Gemini</div>
+            <div class="cat"><span class="cat-dot c-chat"></span>Chat</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="chat tools" data-url="https://copilot.microsoft.com" data-video="zhFDhnTb0Gc" data-name="Copilot" data-desc="Microsoft Copilot es un asistente de IA integrado que combina búsqueda web, generación de contenido y capacidades de análisis. Ideal para crear documentos, presentaciones y realizar investigaciones.">
+          <div class="logo" style="background:linear-gradient(135deg,#2563eb,#06b6d4)">CP</div>
+          <div class="meta">
+            <div class="name">Copilot</div>
+            <div class="cat"><span class="cat-dot c-chat"></span>Chat</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="chat" data-url="https://claude.ai" data-name="Claude" data-desc="Claude es un asistente de IA desarrollado por Anthropic. Destaca en análisis de documentos largos, razonamiento complejo, programación y ofrece respuestas detalladas y bien estructuradas.">
+          <div class="logo" style="background:linear-gradient(135deg,#ef4444,#f97316)">CL</div>
+          <div class="meta">
+            <div class="name">Claude</div>
+            <div class="cat"><span class="cat-dot c-chat"></span>Chat</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="chat" data-url="https://www.perplexity.ai" data-name="Perplexity" data-desc="Perplexity es un motor de búsqueda impulsado por IA que proporciona respuestas precisas con fuentes verificables. Excelente para investigación académica y obtener información actualizada con referencias.">
+          <div class="logo" style="background:linear-gradient(135deg,#06b6d4,#0ea5a4)">PX</div>
+          <div class="meta">
+            <div class="name">Perplexity</div>
+            <div class="cat"><span class="cat-dot c-chat"></span>Chat</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="img" data-url="https://www.canva.com" data-name="Canva IA" data-desc="Canva con IA integrada te permite crear diseños profesionales, presentaciones, infografías y materiales educativos con plantillas inteligentes y generación automática de contenido visual.">
+          <div class="logo" style="background:linear-gradient(135deg,#06b6d4,#7c3aed)">CV</div>
+          <div class="meta">
+            <div class="name">Canva IA</div>
+            <div class="cat"><span class="cat-dot c-img"></span>Imágenes</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="img" data-url="https://stability.ai" data-name="Stable Diffusion" data-desc="Stable Diffusion es un modelo de IA para generar imágenes a partir de texto. Perfecto para crear ilustraciones educativas, visualizaciones de conceptos y material gráfico personalizado.">
+          <div class="logo" style="background:linear-gradient(135deg,#4c1d95,#1e40af)">SD</div>
+          <div class="meta">
+            <div class="name">Stable Diffusion</div>
+            <div class="cat"><span class="cat-dot c-img"></span>Imágenes</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="img" data-url="https://openai.com/dall-e" data-name="DALL·E" data-desc="DALL·E de OpenAI genera imágenes creativas y realistas desde descripciones textuales. Útil para crear recursos visuales únicos, ilustraciones de conceptos abstractos y material didáctico.">
+          <div class="logo" style="background:linear-gradient(135deg,#0ea5a4,#06b6d4)">DAL</div>
+          <div class="meta">
+            <div class="name">DALL·E</div>
+            <div class="cat"><span class="cat-dot c-img"></span>Imágenes</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="tools" data-url="https://designer.microsoft.com" data-name="Designer" data-desc="Microsoft Designer usa IA para crear diseños gráficos profesionales automáticamente. Ideal para crear posters educativos, invitaciones a eventos escolares y contenido visual atractivo.">
+          <div class="logo" style="background:linear-gradient(135deg,#0369a1,#7dd3fc)">MD</div>
+          <div class="meta">
+            <div class="name">Designer</div>
+            <div class="cat"><span class="cat-dot c-tools"></span>Herramientas</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="tools" data-url="https://www.adobe.com/express" data-name="Adobe Express" data-desc="Adobe Express con IA permite crear videos, gráficos y páginas web de forma rápida. Perfecto para proyectos multimedia educativos, presentaciones visuales y contenido para redes sociales.">
+          <div class="logo" style="background:linear-gradient(135deg,#ef4444,#fb923c)">AE</div>
+          <div class="meta">
+            <div class="name">Adobe Express</div>
+            <div class="cat"><span class="cat-dot c-tools"></span>Herramientas</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="audio" data-url="https://www.descript.com" data-name="Descript" data-desc="Descript es una herramienta de edición de audio y video que usa IA para transcribir, editar como texto y mejorar la calidad. Ideal para crear podcasts educativos y videos didácticos.">
+          <div class="logo" style="background:linear-gradient(135deg,#f472b6,#fb7185)">DS</div>
+          <div class="meta">
+            <div class="name">Descript</div>
+            <div class="cat"><span class="cat-dot c-audio"></span>Audio</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="audio" data-url="https://elevenlabs.io" data-name="ElevenLabs" data-desc="ElevenLabs genera voces realistas con IA. Puedes crear narraciones para videos educativos, audiolibros, podcasts y contenido accesible en múltiples idiomas con voces naturales.">
+          <div class="logo" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">EL</div>
+          <div class="meta">
+            <div class="name">ElevenLabs</div>
+            <div class="cat"><span class="cat-dot c-audio"></span>Audio</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="video" data-url="https://lumen5.com" data-name="Lumen5" data-desc="Lumen5 convierte texto en videos atractivos automáticamente. Perfecto para crear contenido educativo visual, resúmenes de lecciones y material multimedia para presentaciones.">
+          <div class="logo" style="background:linear-gradient(135deg,#16a34a,#34d399)">L5</div>
+          <div class="meta">
+            <div class="name">Lumen5</div>
+            <div class="cat"><span class="cat-dot c-video"></span>Video</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="video" data-url="https://pictory.ai" data-name="Pictory" data-desc="Pictory crea videos cortos desde artículos largos o scripts usando IA. Útil para convertir contenido educativo escrito en videos dinámicos y atractivos para estudiantes.">
+          <div class="logo" style="background:linear-gradient(135deg,#10b981,#059669)">PT</div>
+          <div class="meta">
+            <div class="name">Pictory</div>
+            <div class="cat"><span class="cat-dot c-video"></span>Video</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="edu" data-url="https://www.grammarly.com" data-name="Grammarly" data-desc="Grammarly es un asistente de escritura con IA que corrige gramática, ortografía y estilo. Ayuda a estudiantes y profesores a mejorar la calidad de sus textos académicos y comunicaciones.">
+          <div class="logo" style="background:linear-gradient(135deg,#0ea5a4,#06b6d4)">GM</div>
+          <div class="meta">
+            <div class="name">Grammarly</div>
+            <div class="cat"><span class="cat-dot c-edu"></span>Educación</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="edu" data-url="https://quillbot.com" data-name="QuillBot" data-desc="QuillBot parafrasea y mejora textos usando IA. Excelente para reformular ideas, mejorar la redacción académica, resumir textos y verificar gramática en diferentes estilos de escritura.">
+          <div class="logo" style="background:linear-gradient(135deg,#f97316,#fb923c)">QB</div>
+          <div class="meta">
+            <div class="name">QuillBot</div>
+            <div class="cat"><span class="cat-dot c-edu"></span>Educación</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="edu" data-url="https://kahoot.com" data-name="Kahoot!" data-desc="Kahoot! es una plataforma de aprendizaje basada en juegos que ahora integra IA para crear cuestionarios interactivos. Hace que el aprendizaje sea divertido y participativo para todas las edades.">
+          <div class="logo" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">KH</div>
+          <div class="meta">
+            <div class="name">Kahoot!</div>
+            <div class="cat"><span class="cat-dot c-edu"></span>Educación</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="edu" data-url="https://socratic.org" data-name="Socratic" data-desc="Socratic de Google usa IA para ayudar a estudiantes a entender sus tareas. Escanea preguntas y proporciona explicaciones paso a paso en matemáticas, ciencias, literatura y más.">
+          <div class="logo" style="background:linear-gradient(135deg,#06b6d4,#0ea5a4)">SC</div>
+          <div class="meta">
+            <div class="name">Socratic</div>
+            <div class="cat"><span class="cat-dot c-edu"></span>Educación</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="tools" data-url="https://www.slidesai.io" data-name="SlidesAI" data-desc="SlidesAI genera presentaciones profesionales automáticamente desde texto. Ahorra tiempo creando slides educativas bien diseñadas con contenido estructurado y visualmente atractivo.">
+          <div class="logo" style="background:linear-gradient(135deg,#3b82f6,#60a5fa)">SA</div>
+          <div class="meta">
+            <div class="name">SlidesAI</div>
+            <div class="cat"><span class="cat-dot c-tools"></span>Herramientas</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="tools" data-url="https://tome.app" data-name="Tome" data-desc="Tome usa IA para crear presentaciones narrativas interactivas. Combina texto, imágenes y diseño automático para contar historias educativas de forma atractiva y memorable.">
+          <div class="logo" style="background:linear-gradient(135deg,#a78bfa,#06b6d4)">TO</div>
+          <div class="meta">
+            <div class="name">Tome</div>
+            <div class="cat"><span class="cat-dot c-tools"></span>Herramientas</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="edu" data-url="https://www.gradescope.com" data-video="bNzIhOV6pQk" data-name="Gradescope" data-desc="Gradescope simplifica la calificación y evaluación con IA. Permite calificar exámenes de forma más rápida, proporcionar retroalimentación consistente y analizar el rendimiento estudiantil automáticamente.">
+          <div class="logo" style="background:linear-gradient(135deg,#16a34a,#0ea5a4)">GS</div>
+          <div class="meta">
+            <div class="name">Gradescope</div>
+            <div class="cat"><span class="cat-dot c-edu"></span>Educación</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="edu" data-url="https://www.formative.com" data-video="zU3vOTrfzYA" data-name="Formative" data-desc="Formative permite crear evaluaciones formativas en tiempo real con IA. Los profesores pueden monitorear el progreso estudiantil instantáneamente y adaptar la enseñanza según las necesidades detectadas.">
+          <div class="logo" style="background:linear-gradient(135deg,#f59e0b,#f97316)">FM</div>
+          <div class="meta">
+            <div class="name">Formative</div>
+            <div class="cat"><span class="cat-dot c-edu"></span>Educación</div>
+          </div>
+        </button>
+
+        <button class="app" data-cat="edu" data-url="https://www.magicschool.ai" data-name="Magic School AI" data-desc="Magic School AI ofrece más de 60 herramientas de IA específicas para educadores. Desde crear planes de clase hasta generar rúbricas, actividades y comunicaciones con padres de familia.">
+          <div class="logo" style="background:linear-gradient(135deg,#c026d3,#7c3aed)">MS</div>
+          <div class="meta">
+            <div class="name">Magic School AI</div>
+            <div class="cat"><span class="cat-dot c-edu"></span>Educación</div>
+          </div>
+        </button>
+      </section>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE VIDEO ==================== -->
+  <div id="videoModal" class="video-modal">
+    <div class="video-modal-content">
+      <div class="video-modal-header">
+        <h2 class="video-modal-title" id="modalTitle">Video Tutorial</h2>
+        <button class="close-modal" id="closeModal">×</button>
+      </div>
+      <div class="modal-video-container" id="videoContainer" style="display:none;">
+        <iframe id="modalVideo" src="" allowfullscreen></iframe>
+      </div>
+      <div class="video-description" id="modalDescription"></div>
+      <div class="modal-button-container">
+        <a id="visitSiteBtn" href="#" target="_blank" class="visit-site-btn">
+          🌐 Visitar Sitio Web
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VISTA: EVALUACIÓN ==================== -->
+  <div id="evaluacionView" class="view">
+    <header class="header">
+      <div class="header-content">
+        <button class="btn-back" data-back="dashboardView">← Volver</button>
+        <button class="btn-logout" id="logoutBtn5">🚪 Salir</button>
+      </div>
+    </header>
+
+    <div class="content-container">
+      <div class="content-section">
+        <h1 class="section-title">📝 Evaluación: Herramientas de IA Educativa</h1>
+        <p class="section-text">Selecciona la respuesta correcta para cada situación. Haz clic en "Verificar Respuesta" para comprobar si acertaste.</p>
+      </div>
+
+      <div class="quiz-container">
+        <!-- Categoría 1: LLMs y Asistentes Conversacionales -->
+        <div class="quiz-category">
+          <h2 class="category-title">🤖 I. LLMs y Asistentes Conversacionales</h2>
+          
+          <div class="quiz-question" data-correct="c">
+            <p class="question-text">Estoy usando Microsoft Teams y Outlook y necesito una IA que me ayude a resumir correos, crear agendas y organizar mis archivos dentro de este ecosistema de manera fluida. ¿Qué LLM se integra mejor de forma nativa?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ChatGPT</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Gemini</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Copilot</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Claude</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="b">
+            <p class="question-text">Necesito que mis estudiantes investiguen un concepto complejo para un ensayo y obtengan información con fuentes confiables citadas de inmediato para evitar el plagio. ¿Qué IA prioriza la atribución de fuentes?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ChatGPT</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Perplexity</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Gemini</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Copilot</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="c">
+            <p class="question-text">Tengo un documento curricular extenso (más de 100 páginas) y necesito un resumen detallado y razonado de sus principales objetivos. ¿Qué LLM es conocido por su superior manejo de grandes ventanas de contexto?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ChatGPT</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Perplexity</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Claude</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Gemini</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="b">
+            <p class="question-text">Estoy dando una clase de introducción a la programación y necesito que una IA me asista en generar ejemplos de código, explicar errores complejos y depurar funciones en varios lenguajes. ¿Qué LLM es líder en desarrollo de software?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Gemini</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> ChatGPT</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Claude</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Perplexity</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="c">
+            <p class="question-text">Quiero automatizar mi flujo de trabajo: resumir los hilos de conversación en Gmail y crear borradores de documentos directamente en Google Docs. ¿Qué LLM ofrece la integración más profunda con Google Workspace?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ChatGPT</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Copilot</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Gemini</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Claude</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+
+        <!-- Categoría 2: Evaluación y Recursos Educativos -->
+        <div class="quiz-category">
+          <h2 class="category-title">📚 II. Evaluación y Recursos Educativos</h2>
+          
+          <div class="quiz-question" data-correct="b">
+            <p class="question-text">Acabo de recibir 200 exámenes de desarrollo escritos a mano. Necesito una forma rápida y, sobre todo, consistente de calificarlos aplicando mi rúbrica y analizando el desempeño por pregunta. ¿Qué plataforma es la mejor para la calificación asistida por IA?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Formative</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Gradescope</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Kahoot!</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Socratic</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="c">
+            <p class="question-text">Necesito crear rápidamente una rúbrica de evaluación, un plan de lección de 5E y un correo electrónico a los padres sobre un viaje escolar, todo en 10 minutos. ¿Qué suite de IA está diseñada para generar estos recursos específicos de docentes?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Gradescope</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Formative</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Magic School AI</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Grammarly</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="b">
+            <p class="question-text">Estoy en medio de una lección y quiero hacer una comprobación rápida de la comprensión, obteniendo las respuestas de los estudiantes en tiempo real para dar feedback inmediato. ¿Qué plataforma de evaluación digital es ideal para esto?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Gradescope</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Formative</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Kahoot!</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Socratic</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="b">
+            <p class="question-text">Antes del examen final, quiero que mis estudiantes hagan un repaso competitivo y divertido en tiempo real, usando sus teléfonos para responder preguntas y ver una tabla de clasificación. ¿Qué herramienta de gamificación es la mejor?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Socratic</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Kahoot!</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Formative</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Magic School AI</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="c">
+            <p class="question-text">Un estudiante me muestra una foto de un problema de matemáticas en su teléfono y no sabe cómo empezar. Quiero recomendarle una app gratuita de IA que lea la foto y le dé explicaciones paso a paso. ¿Cuál es la mejor opción?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Kahoot!</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Gradescope</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Socratic</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Formative</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+
+        <!-- Categoría 3: Redacción y Comunicación -->
+        <div class="quiz-category">
+          <h2 class="category-title">✍️ III. Redacción y Comunicación</h2>
+          
+          <div class="quiz-question" data-correct="a">
+            <p class="question-text">Mis estudiantes no son nativos del inglés y frecuentemente cometen errores de gramática y puntuación en sus ensayos. Necesito una herramienta que les ayude en tiempo real mientras escriben. ¿Cuál es la mejor?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Grammarly</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> QuillBot</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> ChatGPT</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Magic School AI</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="b">
+            <p class="question-text">Un estudiante necesita parafrasear un párrafo de un artículo académico para su ensayo sin plagiarlo, manteniendo el mismo significado. ¿Qué herramienta es ideal para reformular texto?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Grammarly</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> QuillBot</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Perplexity</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Claude</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+
+        <!-- Categoría 4: Contenido Visual y Multimedia -->
+        <div class="quiz-category">
+          <h2 class="category-title">🎨 IV. Contenido Visual y Multimedia</h2>
+          
+          <div class="quiz-question" data-correct="c">
+            <p class="question-text">Necesito crear una presentación visualmente impactante con infografías para una conferencia educativa en dos días, pero no tengo habilidades avanzadas de diseño. ¿Qué plataforma con IA es más versátil?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> SlidesAI</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Tome</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Canva IA</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Designer</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="b">
+            <p class="question-text">Quiero convertir un artículo educativo largo en un video de 2 minutos con imágenes relevantes y texto animado para publicar en redes sociales. ¿Qué herramienta hace esto automáticamente?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Pictory</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Lumen5</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Descript</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Adobe Express</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="d">
+            <p class="question-text">Estoy grabando un podcast educativo y necesito eliminar pausas incómodas, muletillas ("ehh", "umm") y mejorar la calidad del audio automáticamente. ¿Qué herramienta es especialista en esto?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ElevenLabs</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Lumen5</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Pictory</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Descript</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="a">
+            <p class="question-text">Necesito crear una narración con voz natural en español para un video educativo sin tener que grabar mi propia voz. ¿Qué plataforma genera las voces más realistas con IA?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ElevenLabs</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Descript</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Lumen5</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Adobe Express</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+
+        <!-- Categoría 5: Presentaciones -->
+        <div class="quiz-category">
+          <h2 class="category-title">📊 V. Presentaciones</h2>
+          
+          <div class="quiz-question" data-correct="a">
+            <p class="question-text">Tengo un documento de texto de 5 páginas con los contenidos de mi próxima clase y necesito convertirlo en slides profesionales en menos de 5 minutos. ¿Qué herramienta genera presentaciones desde texto?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> SlidesAI</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Canva IA</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Designer</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> ChatGPT</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-correct="b">
+            <p class="question-text">Quiero crear una presentación interactiva y narrativa que combine automáticamente texto, imágenes generadas por IA y diseño creativo para contar una historia educativa. ¿Qué plataforma es ideal?</p>
+            <div class="options-grid">
+              <button class="option-btn" data-option="a"><span class="option-letter">a</span> SlidesAI</button>
+              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Tome</button>
+              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Canva IA</button>
+              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Adobe Express</button>
+            </div>
+            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== SISTEMA DE AUTENTICACIÓN ====================
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+    const loginView = document.getElementById('loginView');
+    const dashboardView = document.getElementById('dashboardView');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+    const nameInput = document.getElementById('nameInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggleFormBtn = document.getElementById('toggleFormBtn');
+    const toggleText = document.getElementById('toggleText');
+    const loginTitle = document.getElementById('loginTitle');
+    const loginSubtitle = document.getElementById('loginSubtitle');
+    const nameGroup = document.getElementById('nameGroup');
+    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+    const alertContainer = document.getElementById('alertContainer');
+    const toggleBtn1 = document.getElementById('toggleBtn1');
+    const toggleBtn2 = document.getElementById('toggleBtn2');
+
+    let isLoginMode = true;
+
+    if (currentUser) {
+      showDashboard();
+    }
+
+    toggleFormBtn.addEventListener('click', () => {
+      isLoginMode = !isLoginMode;
+      
+      if (isLoginMode) {
+        loginTitle.textContent = 'Iniciar Sesión';
+        loginSubtitle.textContent = 'Ingresa tus credenciales para continuar';
+        submitBtn.textContent = 'Iniciar Sesión';
+        toggleText.textContent = '¿No tienes cuenta? Regístrate aquí';
+        nameGroup.classList.add('hidden');
+        confirmPasswordGroup.classList.add('hidden');
+      } else {
+        loginTitle.textContent = 'Crear Cuenta';
+        loginSubtitle.textContent = 'Regístrate para acceder a la plataforma';
+        submitBtn.textContent = 'Registrarse';
+        toggleText.textContent = '¿Ya tienes cuenta? Inicia sesión aquí';
+        nameGroup.classList.remove('hidden');
+        confirmPasswordGroup.classList.remove('hidden');
+      }
+      
+      clearInputs();
+      clearAlert();
+    });
+
+    toggleBtn1.addEventListener('click', () => {
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+      toggleBtn1.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    toggleBtn2.addEventListener('click', () => {
+      const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+      confirmPasswordInput.type = type;
+      toggleBtn2.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+
+    submitBtn.addEventListener('click', () => {
+      if (isLoginMode) {
+        handleLogin();
+      } else {
+        handleRegister();
+      }
+    });
+
+    [emailInput, passwordInput, confirmPasswordInput, nameInput].forEach(input => {
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          submitBtn.click();
+        }
+      });
+    });
+
+    function handleLogin() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showAlert('Por favor completa todos los campos', 'error');
+        return;
+      }
+
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (user) {
+        currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        showAlert('¡Bienvenido! Redirigiendo...', 'success');
+        setTimeout(showDashboard, 1000);
+      } else {
+        showAlert('Correo o contraseña incorrectos', 'error');
+      }
+    }
+
+    function handleRegister() {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (!name || !email || !password || !confirmPassword) {
+        showAlert('Por favor completa todos los campos', 'error');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showAlert('Las contraseñas no coinciden', 'error');
+        return;
+      }
+
+      if (password.length < 6) {
+        showAlert('La contraseña debe tener al menos 6 caracteres', 'error');
+        return;
+      }
+
+      if (users.find(u => u.email === email)) {
+        showAlert('Este correo ya está registrado', 'error');
+        return;
+      }
+
+      const newUser = { name, email, password };
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+
+      showAlert('¡Cuenta creada exitosamente! Iniciando sesión...', 'success');
+      setTimeout(() => {
+        currentUser = newUser;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        showDashboard();
+      }, 1500);
+    }
+
+    function showDashboard() {
+      loginView.classList.remove('active');
+      dashboardView.classList.add('active');
+      document.getElementById('userName').textContent = currentUser.name;
+    }
+
+    function showAlert(message, type) {
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          ${message}
+        </div>
+      `;
+    }
+
+    function clearAlert() {
+      alertContainer.innerHTML = '';
+    }
+
+    function clearInputs() {
+      emailInput.value = '';
+      passwordInput.value = '';
+      confirmPasswordInput.value = '';
+      nameInput.value = '';
+    }
+
+    // ==================== NAVEGACIÓN ENTRE VISTAS ====================
+    const views = document.querySelectorAll('.view');
+    const unitCards = document.querySelectorAll('.unit-card');
+    const backButtons = document.querySelectorAll('.btn-back');
+    const logoutButtons = document.querySelectorAll('[id^="logoutBtn"]');
+
+    unitCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const targetView = card.dataset.view;
+        showView(targetView);
+      });
+    });
+
+    backButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetView = btn.dataset.back;
+        showView(targetView);
+      });
+    });
+
+    logoutButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentUser = null;
+        localStorage.removeItem('currentUser');
+        showView('loginView');
+        clearInputs();
+        clearAlert();
+      });
+    });
+
+    function showView(viewId) {
+      views.forEach(v => v.classList.remove('active'));
+      document.getElementById(viewId).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    // ==================== FILTRADO DE APLICACIONES ====================
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const apps = document.querySelectorAll('.app');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        apps.forEach(app => {
+          if (filter === 'all' || app.dataset.cat.includes(filter)) {
+            app.style.display = 'flex';
+          } else {
+            app.style.display = 'none';
+          }
+        });
+
+        updateCount();
+      });
+    });
+
+    function updateCount() {
+      const visibleApps = Array.from(apps).filter(app => app.style.display !== 'none').length;
+      const countElement = document.getElementById('appCount');
+      if (countElement) {
+        countElement.textContent = visibleApps;
+      }
+    }
+
+    // ==================== MODAL DE VIDEO ====================
+    const videoModal = document.getElementById('videoModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalVideo = document.getElementById('modalVideo');
+    const videoContainer = document.getElementById('videoContainer');
+    const visitSiteBtn = document.getElementById('visitSiteBtn');
+
+    apps.forEach(app => {
+      app.addEventListener('click', () => {
+        const url = app.dataset.url;
+        const videoId = app.dataset.video;
+        const name = app.dataset.name;
+        const desc = app.dataset.desc;
+
+        modalTitle.textContent = name;
+        modalDescription.textContent = desc;
+        visitSiteBtn.href = url;
+
+        if (videoId) {
+          videoContainer.style.display = 'block';
+          modalVideo.src = `https://www.youtube.com/embed/${videoId}`;
+        } else {
+          videoContainer.style.display = 'none';
+          modalVideo.src = '';
+        }
+
+        videoModal.classList.add('active');
+      });
+    });
+
+    closeModal.addEventListener('click', () => {
+      videoModal.classList.remove('active');
+      modalVideo.src = '';
+    });
+
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) {
+        videoModal.classList.remove('active');
+        modalVideo.src = '';
+      }
+    });
+
+    // ==================== SISTEMA DE EVALUACIÓN ====================
+    const quizQuestions = document.querySelectorAll('.quiz-question');
+
+    quizQuestions.forEach(question => {
+      const options = question.querySelectorAll('.option-btn');
+      const checkBtn = question.querySelector('.check-answer-btn');
+      const feedback = question.querySelector('.feedback');
+      const correctAnswer = question.dataset.correct;
+      let selectedOption = null;
+
+      options.forEach(option => {
+        option.addEventListener('click', () => {
+          if (!option.classList.contains('correct') && !option.classList.contains('incorrect')) {
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            selectedOption = option.dataset.option;
+            checkBtn.disabled = false;
+          }
+        });
+      });
+
+      checkBtn.addEventListener('click', () => {
+        if (!selectedOption) return;
+
+        const isCorrect = selectedOption === correctAnswer;
+
+        options.forEach(opt => {
+          opt.style.pointerEvents = 'none';
+          if (opt.dataset.option === correctAnswer) {
+            opt.classList.add('correct');
+          } else if (opt.dataset.option === selectedOption && !isCorrect) {
+            opt.classList.add('incorrect');
+          }
+        });
+
+        if (isCorrect) {
+          feedback.textContent = '¡Correcto! ✓ Excelente elección.';
+          feedback.className = 'feedback correct show';
+        } else {
+          feedback.textContent = '✗ Incorrecto. Revisa la respuesta correcta marcada en verde.';
+          feedback.className = 'feedback incorrect show';
+        }
+
+        checkBtn.disabled = true;
+      });
+    });
+  </script>
+
+</body>
+</html>
