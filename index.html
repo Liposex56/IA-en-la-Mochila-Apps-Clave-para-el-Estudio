@@ -676,6 +676,17 @@
       margin-bottom: 20px;
     }
 
+    .question-number {
+      display: inline-block;
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
     .question-text {
       font-size: 16px;
       line-height: 1.6;
@@ -738,50 +749,93 @@
       flex-shrink: 0;
     }
 
-    .check-answer-btn {
+    /* Nuevos estilos para el botón único de verificación */
+    .submit-quiz-btn, .reset-quiz-btn {
       background: linear-gradient(135deg, #fbbf24, #f59e0b);
       color: #0f172a;
       border: none;
-      padding: 12px 28px;
+      padding: 16px 40px;
       border-radius: 10px;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 18px;
       cursor: pointer;
-      margin-top: 15px;
       transition: all 0.3s;
+      display: block;
+      margin: 30px auto;
     }
 
-    .check-answer-btn:hover {
+    .submit-quiz-btn:hover, .reset-quiz-btn:hover {
       transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(251, 191, 36, 0.4);
     }
 
-    .check-answer-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    .reset-quiz-btn {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
     }
 
-    .feedback {
-      margin-top: 15px;
-      padding: 15px;
+    /* ==================== RESULTADOS ==================== */
+    .results-container {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .results-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #fbbf24;
+      margin-bottom: 20px;
+    }
+
+    .score-display {
+      font-size: 72px;
+      font-weight: bold;
+      color: #22c55e;
+      margin: 20px 0;
+    }
+
+    .score-display.fail {
+      color: #ef4444;
+    }
+
+    .chart-container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto !important;
+    }
+
+    .download-certificate-btn {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      border: none;
+      padding: 16px 40px;
       border-radius: 10px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .feedback.show {
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 20px auto;
       display: block;
     }
 
-    .feedback.correct {
-      background: rgba(34, 197, 94, 0.2);
-      border: 1px solid #22c55e;
-      color: #86efac;
+    .download-certificate-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
     }
 
-    .feedback.incorrect {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid #ef4444;
-      color: #fca5a5;
+    #certificateCanvas {
+      display: none;
     }
 
     @media (max-width: 768px) {
@@ -811,6 +865,10 @@
 
       .category-title {
         font-size: 20px;
+      }
+
+      .score-display {
+        font-size: 48px;
       }
     }
   </style>
@@ -1363,258 +1421,69 @@
     <div class="content-container">
       <div class="content-section">
         <h1 class="section-title">📝 Evaluación: Herramientas de IA Educativa</h1>
-        <p class="section-text">Selecciona la respuesta correcta para cada situación. Haz clic en "Verificar Respuesta" para comprobar si acertaste.</p>
+        <p class="section-text">Selecciona la respuesta correcta para cada pregunta. Al finalizar, haz clic en "Verificar Evaluación".</p>
       </div>
 
-      <div class="quiz-container">
-        <!-- Categoría 1: LLMs y Asistentes Conversacionales -->
-        <div class="quiz-category">
-          <h2 class="category-title">🤖 I. LLMs y Asistentes Conversacionales</h2>
-          
-          <div class="quiz-question" data-correct="c">
-            <p class="question-text">Estoy usando Microsoft Teams y Outlook y necesito una IA que me ayude a resumir correos, crear agendas y organizar mis archivos dentro de este ecosistema de manera fluida. ¿Qué LLM se integra mejor de forma nativa?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ChatGPT</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Gemini</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Copilot</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Claude</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
+      <div class="quiz-container" id="quizContainer"></div>
 
-          <div class="quiz-question" data-correct="b">
-            <p class="question-text">Necesito que mis estudiantes investiguen un concepto complejo para un ensayo y obtengan información con fuentes confiables citadas de inmediato para evitar el plagio. ¿Qué IA prioriza la atribución de fuentes?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ChatGPT</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Perplexity</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Gemini</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Copilot</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="c">
-            <p class="question-text">Tengo un documento curricular extenso (más de 100 páginas) y necesito un resumen detallado y razonado de sus principales objetivos. ¿Qué LLM es conocido por su superior manejo de grandes ventanas de contexto?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ChatGPT</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Perplexity</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Claude</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Gemini</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="b">
-            <p class="question-text">Estoy dando una clase de introducción a la programación y necesito que una IA me asista en generar ejemplos de código, explicar errores complejos y depurar funciones en varios lenguajes. ¿Qué LLM es líder en desarrollo de software?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Gemini</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> ChatGPT</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Claude</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Perplexity</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="c">
-            <p class="question-text">Quiero automatizar mi flujo de trabajo: resumir los hilos de conversación en Gmail y crear borradores de documentos directamente en Google Docs. ¿Qué LLM ofrece la integración más profunda con Google Workspace?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ChatGPT</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Copilot</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Gemini</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Claude</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-        </div>
-
-        <!-- Categoría 2: Evaluación y Recursos Educativos -->
-        <div class="quiz-category">
-          <h2 class="category-title">📚 II. Evaluación y Recursos Educativos</h2>
-          
-          <div class="quiz-question" data-correct="b">
-            <p class="question-text">Acabo de recibir 200 exámenes de desarrollo escritos a mano. Necesito una forma rápida y, sobre todo, consistente de calificarlos aplicando mi rúbrica y analizando el desempeño por pregunta. ¿Qué plataforma es la mejor para la calificación asistida por IA?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Formative</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Gradescope</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Kahoot!</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Socratic</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="c">
-            <p class="question-text">Necesito crear rápidamente una rúbrica de evaluación, un plan de lección de 5E y un correo electrónico a los padres sobre un viaje escolar, todo en 10 minutos. ¿Qué suite de IA está diseñada para generar estos recursos específicos de docentes?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Gradescope</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Formative</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Magic School AI</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Grammarly</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="b">
-            <p class="question-text">Estoy en medio de una lección y quiero hacer una comprobación rápida de la comprensión, obteniendo las respuestas de los estudiantes en tiempo real para dar feedback inmediato. ¿Qué plataforma de evaluación digital es ideal para esto?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Gradescope</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Formative</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Kahoot!</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Socratic</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="b">
-            <p class="question-text">Antes del examen final, quiero que mis estudiantes hagan un repaso competitivo y divertido en tiempo real, usando sus teléfonos para responder preguntas y ver una tabla de clasificación. ¿Qué herramienta de gamificación es la mejor?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Socratic</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Kahoot!</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Formative</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Magic School AI</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="c">
-            <p class="question-text">Un estudiante me muestra una foto de un problema de matemáticas en su teléfono y no sabe cómo empezar. Quiero recomendarle una app gratuita de IA que lea la foto y le dé explicaciones paso a paso. ¿Cuál es la mejor opción?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Kahoot!</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Gradescope</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Socratic</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Formative</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-        </div>
-
-        <!-- Categoría 3: Redacción y Comunicación -->
-        <div class="quiz-category">
-          <h2 class="category-title">✍️ III. Redacción y Comunicación</h2>
-          
-          <div class="quiz-question" data-correct="a">
-            <p class="question-text">Mis estudiantes no son nativos del inglés y frecuentemente cometen errores de gramática y puntuación en sus ensayos. Necesito una herramienta que les ayude en tiempo real mientras escriben. ¿Cuál es la mejor?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Grammarly</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> QuillBot</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> ChatGPT</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Magic School AI</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="b">
-            <p class="question-text">Un estudiante necesita parafrasear un párrafo de un artículo académico para su ensayo sin plagiarlo, manteniendo el mismo significado. ¿Qué herramienta es ideal para reformular texto?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Grammarly</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> QuillBot</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Perplexity</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Claude</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-        </div>
-
-        <!-- Categoría 4: Contenido Visual y Multimedia -->
-        <div class="quiz-category">
-          <h2 class="category-title">🎨 IV. Contenido Visual y Multimedia</h2>
-          
-          <div class="quiz-question" data-correct="c">
-            <p class="question-text">Necesito crear una presentación visualmente impactante con infografías para una conferencia educativa en dos días, pero no tengo habilidades avanzadas de diseño. ¿Qué plataforma con IA es más versátil?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> SlidesAI</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Tome</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Canva IA</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Designer</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="b">
-            <p class="question-text">Quiero convertir un artículo educativo largo en un video de 2 minutos con imágenes relevantes y texto animado para publicar en redes sociales. ¿Qué herramienta hace esto automáticamente?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> Pictory</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Lumen5</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Descript</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Adobe Express</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="d">
-            <p class="question-text">Estoy grabando un podcast educativo y necesito eliminar pausas incómodas, muletillas ("ehh", "umm") y mejorar la calidad del audio automáticamente. ¿Qué herramienta es especialista en esto?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ElevenLabs</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Lumen5</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Pictory</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Descript</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="a">
-            <p class="question-text">Necesito crear una narración con voz natural en español para un video educativo sin tener que grabar mi propia voz. ¿Qué plataforma genera las voces más realistas con IA?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> ElevenLabs</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Descript</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Lumen5</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Adobe Express</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-        </div>
-
-        <!-- Categoría 5: Presentaciones -->
-        <div class="quiz-category">
-          <h2 class="category-title">📊 V. Presentaciones</h2>
-          
-          <div class="quiz-question" data-correct="a">
-            <p class="question-text">Tengo un documento de texto de 5 páginas con los contenidos de mi próxima clase y necesito convertirlo en slides profesionales en menos de 5 minutos. ¿Qué herramienta genera presentaciones desde texto?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> SlidesAI</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Canva IA</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Designer</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> ChatGPT</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="quiz-question" data-correct="b">
-            <p class="question-text">Quiero crear una presentación interactiva y narrativa que combine automáticamente texto, imágenes generadas por IA y diseño creativo para contar una historia educativa. ¿Qué plataforma es ideal?</p>
-            <div class="options-grid">
-              <button class="option-btn" data-option="a"><span class="option-letter">a</span> SlidesAI</button>
-              <button class="option-btn" data-option="b"><span class="option-letter">b</span> Tome</button>
-              <button class="option-btn" data-option="c"><span class="option-letter">c</span> Canva IA</button>
-              <button class="option-btn" data-option="d"><span class="option-letter">d</span> Adobe Express</button>
-            </div>
-            <button class="check-answer-btn" disabled>Verificar Respuesta</button>
-            <div class="feedback"></div>
-          </div>
-        </div>
-      </div>
+      <button id="submitQuizBtn" class="submit-quiz-btn">🎯 Verificar Evaluación</button>
     </div>
   </div>
 
+  <!-- ==================== VISTA: RESULTADOS ==================== -->
+  <div id="resultsView" class="view">
+    <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="header-logo">🏆</div>
+          <div>
+            <div style="font-size: 20px; font-weight: bold;">Resultados de Evaluación</div>
+            <div style="font-size: 12px; color: #bfdbfe;" id="userNameHeaderResults"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-container">
+      <div class="results-container">
+        <h2 class="results-title">Resultados de tu Evaluación</h2>
+        <div class="score-display" id="scoreDisplay">0%</div>
+        <p class="section-text" id="resultMessage"></p>
+
+        <div class="chart-container">
+          <canvas id="resultsChart"></canvas>
+        </div>
+
+        <div id="certificateSection" class="hidden">
+          <p class="section-text" style="color: #22c55e; font-size: 18px; margin: 20px 0;">
+            ¡Felicitaciones! Has aprobado la evaluación
+          </p>
+          <button id="downloadCertificateBtn" class="download-certificate-btn">
+            📜 Descargar Certificado
+          </button>
+        </div>
+
+        <button id="resetQuizBtn" class="reset-quiz-btn">🔄 Reiniciar Evaluación</button>
+      </div>
+
+      <div id="detailedResults" class="quiz-container"></div>
+    </div>
+  </div>
+
+  <canvas id="certificateCanvas" width="1200" height="850"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
     // ==================== SISTEMA DE AUTENTICACIÓN ====================
     let users = JSON.parse(localStorage.getItem('users')) || [];
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+    // Variable para almacenar datos del usuario de evaluación
+    let evaluationUserData = {
+      name: '',
+      email: '',
+      institution: ''
+    };
 
     const loginView = document.getElementById('loginView');
     const dashboardView = document.getElementById('dashboardView');
@@ -1783,8 +1652,26 @@
     unitCards.forEach(card => {
       card.addEventListener('click', () => {
         const targetView = card.dataset.view;
-        showView(targetView);
+        
+        // Si es la evaluación, capturar datos del usuario primero
+        if (targetView === 'evaluacionView') {
+          captureUserDataForEvaluation();
+        } else {
+          showView(targetView);
+        }
       });
+    });
+
+    // Event listener específico para el botón de evaluación (por si acaso)
+    document.addEventListener('DOMContentLoaded', () => {
+      const evalCard = document.querySelector('[data-view="evaluacionView"]');
+      if (evalCard) {
+        evalCard.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          captureUserDataForEvaluation();
+        });
+      }
     });
 
     backButtons.forEach(btn => {
@@ -1808,6 +1695,46 @@
       views.forEach(v => v.classList.remove('active'));
       document.getElementById(viewId).classList.add('active');
       window.scrollTo(0, 0);
+    }
+
+    // ==================== CAPTURAR DATOS PARA EVALUACIÓN ====================
+    function captureUserDataForEvaluation() {
+      // Usar el nombre del usuario actual si existe
+      let name = currentUser ? currentUser.name : '';
+      let email = currentUser ? currentUser.email : '';
+      
+      if (!name) {
+        name = prompt('Ingresa tu nombre completo:');
+        if (!name || name.trim() === '') {
+          alert('El nombre es obligatorio para tomar la evaluación');
+          return;
+        }
+      }
+
+      if (!email) {
+        email = prompt('Ingresa tu correo electrónico:');
+        if (!email || email.trim() === '' || !email.includes('@')) {
+          alert('Ingresa un correo electrónico válido');
+          return;
+        }
+      }
+
+      let institution = prompt('Ingresa tu institución educativa:');
+      if (!institution || institution.trim() === '') {
+        alert('La institución es obligatoria para tomar la evaluación');
+        return;
+      }
+
+      evaluationUserData = {
+        name: name.trim(),
+        email: email.trim(),
+        institution: institution.trim()
+      };
+
+      console.log('Datos capturados:', evaluationUserData); // Para debug
+
+      initializeQuiz();
+      showView('evaluacionView');
     }
 
     // ==================== FILTRADO DE APLICACIONES ====================
@@ -1885,52 +1812,470 @@
       }
     });
 
-    // ==================== SISTEMA DE EVALUACIÓN ====================
-    const quizQuestions = document.querySelectorAll('.quiz-question');
+    // ==================== BANCO DE PREGUNTAS ====================
+    const allQuestions = [
+      {
+        category: '🤖 I. LLMs y Asistentes Conversacionales',
+        question: 'Estoy usando Microsoft Teams y Outlook y necesito una IA que me ayude a resumir correos, crear agendas y organizar mis archivos dentro de este ecosistema de manera fluida. ¿Qué LLM se integra mejor de forma nativa?',
+        options: ['ChatGPT', 'Gemini', 'Copilot', 'Claude'],
+        correct: 2
+      },
+      {
+        category: '🤖 I. LLMs y Asistentes Conversacionales',
+        question: 'Necesito que mis estudiantes investiguen un concepto complejo para un ensayo y obtengan información con fuentes confiables citadas de inmediato para evitar el plagio. ¿Qué IA prioriza la atribución de fuentes?',
+        options: ['ChatGPT', 'Perplexity', 'Gemini', 'Copilot'],
+        correct: 1
+      },
+      {
+        category: '🤖 I. LLMs y Asistentes Conversacionales',
+        question: 'Tengo un documento curricular extenso (más de 100 páginas) y necesito un resumen detallado y razonado de sus principales objetivos. ¿Qué LLM es conocido por su superior manejo de grandes ventanas de contexto?',
+        options: ['ChatGPT', 'Perplexity', 'Claude', 'Gemini'],
+        correct: 2
+      },
+      {
+        category: '🤖 I. LLMs y Asistentes Conversacionales',
+        question: 'Estoy dando una clase de introducción a la programación y necesito que una IA me asista en generar ejemplos de código, explicar errores complejos y depurar funciones en varios lenguajes. ¿Qué LLM es líder en desarrollo de software?',
+        options: ['Gemini', 'ChatGPT', 'Claude', 'Perplexity'],
+        correct: 1
+      },
+      {
+        category: '🤖 I. LLMs y Asistentes Conversacionales',
+        question: 'Quiero automatizar mi flujo de trabajo: resumir los hilos de conversación en Gmail y crear borradores de documentos directamente en Google Docs. ¿Qué LLM ofrece la integración más profunda con Google Workspace?',
+        options: ['ChatGPT', 'Copilot', 'Gemini', 'Claude'],
+        correct: 2
+      },
+      {
+        category: '📚 II. Evaluación y Recursos Educativos',
+        question: 'Acabo de recibir 200 exámenes de desarrollo escritos a mano. Necesito una forma rápida y, sobre todo, consistente de calificarlos aplicando mi rúbrica y analizando el desempeño por pregunta. ¿Qué plataforma es la mejor para la calificación asistida por IA?',
+        options: ['Formative', 'Gradescope', 'Kahoot!', 'Socratic'],
+        correct: 1
+      },
+      {
+        category: '📚 II. Evaluación y Recursos Educativos',
+        question: 'Necesito crear rápidamente una rúbrica de evaluación, un plan de lección de 5E y un correo electrónico a los padres sobre un viaje escolar, todo en 10 minutos. ¿Qué suite de IA está diseñada para generar estos recursos específicos de docentes?',
+        options: ['Gradescope', 'Formative', 'Magic School AI', 'Grammarly'],
+        correct: 2
+      },
+      {
+        category: '📚 II. Evaluación y Recursos Educativos',
+        question: 'Estoy en medio de una lección y quiero hacer una comprobación rápida de la comprensión, obteniendo las respuestas de los estudiantes en tiempo real para dar feedback inmediato. ¿Qué plataforma de evaluación digital es ideal para esto?',
+        options: ['Gradescope', 'Formative', 'Kahoot!', 'Socratic'],
+        correct: 1
+      },
+      {
+        category: '📚 II. Evaluación y Recursos Educativos',
+        question: 'Antes del examen final, quiero que mis estudiantes hagan un repaso competitivo y divertido en tiempo real, usando sus teléfonos para responder preguntas y ver una tabla de clasificación. ¿Qué herramienta de gamificación es la mejor?',
+        options: ['Socratic', 'Kahoot!', 'Formative', 'Magic School AI'],
+        correct: 1
+      },
+      {
+        category: '📚 II. Evaluación y Recursos Educativos',
+        question: 'Un estudiante me muestra una foto de un problema de matemáticas en su teléfono y no sabe cómo empezar. Quiero recomendarle una app gratuita de IA que lea la foto y le dé explicaciones paso a paso. ¿Cuál es la mejor opción?',
+        options: ['Kahoot!', 'Gradescope', 'Socratic', 'Formative'],
+        correct: 2
+      },
+      {
+        category: '✍️ III. Redacción y Comunicación',
+        question: 'Mis estudiantes no son nativos del inglés y frecuentemente cometen errores de gramática y puntuación en sus ensayos. Necesito una herramienta que les ayude en tiempo real mientras escriben. ¿Cuál es la mejor?',
+        options: ['Grammarly', 'QuillBot', 'ChatGPT', 'Magic School AI'],
+        correct: 0
+      },
+      {
+        category: '✍️ III. Redacción y Comunicación',
+        question: 'Un estudiante necesita parafrasear un párrafo de un artículo académico para su ensayo sin plagiarlo, manteniendo el mismo significado. ¿Qué herramienta es ideal para reformular texto?',
+        options: ['Grammarly', 'QuillBot', 'Perplexity', 'Claude'],
+        correct: 1
+      },
+      {
+        category: '🎨 IV. Contenido Visual y Multimedia',
+        question: 'Necesito crear una presentación visualmente impactante con infografías para una conferencia educativa en dos días, pero no tengo habilidades avanzadas de diseño. ¿Qué plataforma con IA es más versátil?',
+        options: ['SlidesAI', 'Tome', 'Canva IA', 'Designer'],
+        correct: 2
+      },
+      {
+        category: '🎨 IV. Contenido Visual y Multimedia',
+        question: 'Quiero convertir un artículo educativo largo en un video de 2 minutos con imágenes relevantes y texto animado para publicar en redes sociales. ¿Qué herramienta hace esto automáticamente?',
+        options: ['Pictory', 'Lumen5', 'Descript', 'Adobe Express'],
+        correct: 1
+      },
+      {
+        category: '🎨 IV. Contenido Visual y Multimedia',
+        question: 'Estoy grabando un podcast educativo y necesito eliminar pausas incómodas, muletillas ("ehh", "umm") y mejorar la calidad del audio automáticamente. ¿Qué herramienta es especialista en esto?',
+        options: ['ElevenLabs', 'Lumen5', 'Pictory', 'Descript'],
+        correct: 3
+      },
+      {
+        category: '🎨 IV. Contenido Visual y Multimedia',
+        question: 'Necesito crear una narración con voz natural en español para un video educativo sin tener que grabar mi propia voz. ¿Qué plataforma genera las voces más realistas con IA?',
+        options: ['ElevenLabs', 'Descript', 'Lumen5', 'Adobe Express'],
+        correct: 0
+      },
+      {
+        category: '📊 V. Presentaciones',
+        question: 'Tengo un documento de texto de 5 páginas con los contenidos de mi próxima clase y necesito convertirlo en slides profesionales en menos de 5 minutos. ¿Qué herramienta genera presentaciones desde texto?',
+        options: ['SlidesAI', 'Canva IA', 'Designer', 'ChatGPT'],
+        correct: 0
+      },
+      {
+        category: '📊 V. Presentaciones',
+        question: 'Quiero crear una presentación interactiva y narrativa que combine automáticamente texto, imágenes generadas por IA y diseño creativo para contar una historia educativa. ¿Qué plataforma es ideal?',
+        options: ['SlidesAI', 'Tome', 'Canva IA', 'Adobe Express'],
+        correct: 1
+      }
+    ];
 
-    quizQuestions.forEach(question => {
-      const options = question.querySelectorAll('.option-btn');
-      const checkBtn = question.querySelector('.check-answer-btn');
-      const feedback = question.querySelector('.feedback');
-      const correctAnswer = question.dataset.correct;
-      let selectedOption = null;
+    let currentQuestions = [];
+    let userAnswers = [];
 
-      options.forEach(option => {
-        option.addEventListener('click', () => {
-          if (!option.classList.contains('correct') && !option.classList.contains('incorrect')) {
-            options.forEach(opt => opt.classList.remove('selected'));
-            option.classList.add('selected');
-            selectedOption = option.dataset.option;
-            checkBtn.disabled = false;
-          }
-        });
-      });
+    // ==================== INICIALIZAR EVALUACIÓN ====================
+    function initializeQuiz() {
+      currentQuestions = shuffleArray([...allQuestions]);
+      userAnswers = new Array(currentQuestions.length).fill(null);
+      renderQuiz();
+    }
 
-      checkBtn.addEventListener('click', () => {
-        if (!selectedOption) return;
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
 
-        const isCorrect = selectedOption === correctAnswer;
+    function renderQuiz() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
 
-        options.forEach(opt => {
-          opt.style.pointerEvents = 'none';
-          if (opt.dataset.option === correctAnswer) {
-            opt.classList.add('correct');
-          } else if (opt.dataset.option === selectedOption && !isCorrect) {
-            opt.classList.add('incorrect');
-          }
-        });
+      let currentCategory = '';
+      let categoryDiv = null;
 
-        if (isCorrect) {
-          feedback.textContent = '¡Correcto! ✓ Excelente elección.';
-          feedback.className = 'feedback correct show';
-        } else {
-          feedback.textContent = '✗ Incorrecto. Revisa la respuesta correcta marcada en verde.';
-          feedback.className = 'feedback incorrect show';
+      currentQuestions.forEach((q, index) => {
+        if (q.category !== currentCategory) {
+          currentCategory = q.category;
+          categoryDiv = document.createElement('div');
+          categoryDiv.className = 'quiz-category';
+          categoryDiv.innerHTML = `<h2 class="category-title">${currentCategory}</h2>`;
+          container.appendChild(categoryDiv);
         }
 
-        checkBtn.disabled = true;
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'quiz-question';
+        questionDiv.innerHTML = `
+          <div class="question-number">Pregunta ${index + 1}</div>
+          <p class="question-text">${q.question}</p>
+          <div class="options-grid">
+            ${q.options.map((opt, i) => `
+              <button class="option-btn" data-question="${index}" data-option="${i}">
+                <span class="option-letter">${String.fromCharCode(97 + i)}</span>
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+        `;
+        
+        categoryDiv.appendChild(questionDiv);
       });
+
+      // Event listeners para opciones
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const qIndex = parseInt(btn.dataset.question);
+          const optIndex = parseInt(btn.dataset.option);
+          
+          // Remover selección previa
+          document.querySelectorAll(`[data-question="${qIndex}"]`).forEach(b => {
+            b.classList.remove('selected');
+          });
+          
+          // Seleccionar nueva opción
+          btn.classList.add('selected');
+          userAnswers[qIndex] = optIndex;
+        });
+      });
+    }
+
+    // ==================== VERIFICAR EVALUACIÓN ====================
+    document.getElementById('submitQuizBtn').addEventListener('click', () => {
+      // Verificar que todas las preguntas estén respondidas
+      const unanswered = userAnswers.filter(a => a === null).length;
+      
+      if (unanswered > 0) {
+        alert(`Por favor responde todas las preguntas. Te faltan ${unanswered} pregunta(s).`);
+        return;
+      }
+
+      // Calcular resultados
+      let correctCount = 0;
+      currentQuestions.forEach((q, i) => {
+        if (userAnswers[i] === q.correct) {
+          correctCount++;
+        }
+      });
+
+      const totalQuestions = currentQuestions.length;
+      const percentage = Math.round((correctCount / totalQuestions) * 100);
+
+      // Mostrar resultados
+      showResults(correctCount, totalQuestions, percentage);
     });
+
+    // ==================== MOSTRAR RESULTADOS ====================
+    function showResults(correctCount, totalQuestions, percentage) {
+      document.getElementById('userNameHeaderResults').textContent = `Evaluado: ${evaluationUserData.name}`;
+      
+      const scoreDisplay = document.getElementById('scoreDisplay');
+      scoreDisplay.textContent = `${percentage}%`;
+      scoreDisplay.className = 'score-display' + (percentage >= 80 ? '' : ' fail');
+
+      const resultMessage = document.getElementById('resultMessage');
+      if (percentage >= 80) {
+        resultMessage.innerHTML = `
+          <strong style="color: #22c55e;">¡Excelente trabajo!</strong><br>
+          Has respondido correctamente ${correctCount} de ${totalQuestions} preguntas.<br>
+          Has aprobado el curso de IA Educativa.
+        `;
+        document.getElementById('certificateSection').classList.remove('hidden');
+      } else {
+        resultMessage.innerHTML = `
+          <strong style="color: #ef4444;">Necesitas mejorar</strong><br>
+          Has respondido correctamente ${correctCount} de ${totalQuestions} preguntas.<br>
+          Necesitas al menos 80% para aprobar. ¡Inténtalo de nuevo!
+        `;
+        document.getElementById('certificateSection').classList.add('hidden');
+      }
+
+      // Crear gráfico
+      createResultsChart(correctCount, totalQuestions - correctCount);
+
+      // Mostrar detalles de respuestas
+      showDetailedResults();
+
+      showView('resultsView');
+    }
+
+    // ==================== GRÁFICO DE RESULTADOS ====================
+    function createResultsChart(correct, incorrect) {
+      const ctx = document.getElementById('resultsChart').getContext('2d');
+      
+      // Destruir gráfico anterior si existe
+      if (window.resultsChartInstance) {
+        window.resultsChartInstance.destroy();
+      }
+
+      window.resultsChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Correctas', 'Incorrectas'],
+          datasets: [{
+            data: [correct, incorrect],
+            backgroundColor: [
+              'rgba(34, 197, 94, 0.8)',
+              'rgba(239, 68, 68, 0.8)'
+            ],
+            borderColor: [
+              'rgba(34, 197, 94, 1)',
+              'rgba(239, 68, 68, 1)'
+            ],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#e0e7ff',
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                },
+                padding: 20
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(15, 23, 42, 0.9)',
+              titleColor: '#fbbf24',
+              bodyColor: '#e0e7ff',
+              borderColor: 'rgba(251, 191, 36, 0.5)',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.parsed || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = Math.round((value / total) * 100);
+                  return `${label}: ${value} (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // ==================== DETALLES DE RESPUESTAS ====================
+    function showDetailedResults() {
+      const container = document.getElementById('detailedResults');
+      container.innerHTML = '<div class="content-section"><h2 class="section-title">📋 Revisión Detallada</h2></div>';
+
+      let currentCategory = '';
+      let categoryDiv = null;
+
+      currentQuestions.forEach((q, index) => {
+        if (q.category !== currentCategory) {
+          currentCategory = q.category;
+          categoryDiv = document.createElement('div');
+          categoryDiv.className = 'quiz-category';
+          categoryDiv.innerHTML = `<h2 class="category-title">${currentCategory}</h2>`;
+          container.appendChild(categoryDiv);
+        }
+
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === q.correct;
+
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'quiz-question';
+        questionDiv.innerHTML = `
+          <div class="question-number">Pregunta ${index + 1} ${isCorrect ? '✓' : '✗'}</div>
+          <p class="question-text">${q.question}</p>
+          <div class="options-grid">
+            ${q.options.map((opt, i) => {
+              let className = 'option-btn';
+              if (i === q.correct) className += ' correct';
+              else if (i === userAnswer && !isCorrect) className += ' incorrect';
+              
+              return `
+                <div class="${className}" style="pointer-events: none;">
+                  <span class="option-letter">${String.fromCharCode(97 + i)}</span>
+                  ${opt}
+                  ${i === q.correct ? ' ✓' : ''}
+                  ${i === userAnswer && !isCorrect ? ' ✗' : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+        
+        categoryDiv.appendChild(questionDiv);
+      });
+    }
+
+    // ==================== REINICIAR EVALUACIÓN ====================
+    document.getElementById('resetQuizBtn').addEventListener('click', () => {
+      if (confirm('¿Estás seguro de que quieres reiniciar la evaluación? Las preguntas se mezclarán de nuevo.')) {
+        initializeQuiz();
+        showView('evaluacionView');
+      }
+    });
+
+    // ==================== GENERAR CERTIFICADO ====================
+    document.getElementById('downloadCertificateBtn').addEventListener('click', () => {
+      generateCertificate();
+    });
+
+    function generateCertificate() {
+      const canvas = document.getElementById('certificateCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // Fondo con gradiente
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, '#1e3a8a');
+      gradient.addColorStop(0.5, '#3b82f6');
+      gradient.addColorStop(1, '#1e3a8a');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Borde decorativo exterior
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 20;
+      ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
+
+      // Borde decorativo interior
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 5;
+      ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
+
+      // Título principal
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 60px serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('CERTIFICADO DE FINALIZACIÓN', canvas.width / 2, 150);
+
+      // Subtítulo
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '30px sans-serif';
+      ctx.fillText('Se otorga a:', canvas.width / 2, 230);
+
+      // Nombre del usuario
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 48px serif';
+      ctx.fillText(evaluationUserData.name.toUpperCase(), canvas.width / 2, 310);
+
+      // Línea decorativa bajo el nombre
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(300, 330);
+      ctx.lineTo(900, 330);
+      ctx.stroke();
+
+      // Texto del curso
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '26px sans-serif';
+      ctx.fillText('Por haber completado satisfactoriamente el curso:', canvas.width / 2, 400);
+
+      ctx.fillStyle = '#93c5fd';
+      ctx.font = 'bold 32px sans-serif';
+      ctx.fillText('Herramientas de Inteligencia Artificial', canvas.width / 2, 450);
+      ctx.fillText('para la Educación', canvas.width / 2, 490);
+
+      // Detalles adicionales
+      ctx.fillStyle = '#e0e7ff';
+      ctx.font = '22px sans-serif';
+      ctx.fillText(`Institución: ${evaluationUserData.institution}`, canvas.width / 2, 570);
+
+      // Fecha
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('es-ES', { 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric' 
+      });
+      ctx.fillText(`Fecha de emisión: ${dateStr}`, canvas.width / 2, 610);
+
+      // Líneas de firma
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'italic 20px serif';
+      ctx.fillText('_________________________', 350, 720);
+      ctx.fillText('_________________________', 850, 720);
+      
+      ctx.font = 'bold 18px sans-serif';
+      ctx.fillText('Director Académico', 350, 750);
+      ctx.fillText('Coordinador del Curso', 850, 750);
+
+      // Sello circular
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(600, 690, 50, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.fillText('CERTIFICADO', 600, 685);
+      ctx.fillText('OFICIAL', 600, 705);
+
+      // Descargar
+      const link = document.createElement('a');
+      link.download = `Certificado_${evaluationUserData.name.replace(/\s+/g, '_')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
   </script>
 
 </body>
